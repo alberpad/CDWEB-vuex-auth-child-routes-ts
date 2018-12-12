@@ -3,6 +3,11 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 
+// Usando import './plugins' da error con bootstrap-vue
+// import './plugins'
+// Usando require funciona
+require('./plugins');
+
 Vue.config.productionTip = false;
 
 new Vue({

@@ -1,31 +1,40 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <loading :active.sync="loading"></loading>
+    <b-container>
+      <navigation-guest v-if="!isLogged"></navigation-guest>
+      <navigation-logged v-else></navigation-logged>
+      <router-view/>
+    </b-container>
   </div>
 </template>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-}
+<script lang="ts">
+import {Component, Vue, Watch} from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import NavigationLogged from '@/components/navigations/Logged/LoggedCom';
+import NavigationGuest from '@/components/navigations/Guest/GuestCom';
+// @ts-ignore
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
+@Component({
+  components: {
+    NavigationLogged,
+    NavigationGuest,
+    Loading,
+  },
+})
+export default class App extends Vue {
+  private currentPath: string = '/';
+  @State('isLogged', {namespace: 'authModule'})
+  private isLogged !: boolean;
+  @State('loading')
+  private loading !: boolean;
+  // @Watch('$route.path', {immediate: true})
+  // private changeRoute(path: string): void {
+  //   this.currentPath = path;
+  //   console.log(this.currentPath);
+  // }
 }
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+</script>
